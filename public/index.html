@@ -3,26 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loner Book Api</title>
+    <title>Loner Book Api - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .auth-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .title-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            margin-top: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #94a3b8;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .footer-links a {
+            color: #a78bfa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #c084fc;
+        }
+
+        .dashboard-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(74, 222, 128, 0.1);
+            color: #4ade80 !important;
+            border-radius: 20px;
+            border: 1px solid rgba(74, 222, 128, 0.2);
+            transition: all 0.3s ease !important;
+        }
+
+        .dashboard-link:hover {
+            background: rgba(74, 222, 128, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 222, 128, 0.15);
+        }
+    </style>
 </head>
 <body>
 
-    <form method="GET" style="align-items:center; justify-content: center; display: flex; flex-direction: column;">
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div class="auth-container">
+        <div class="title-container">
             <h1>Loner Book Api</h1>
-            <h2>Login</h2>
+            <h2>Welcome back! Please login.</h2>
         </div>
         
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <input name="username" type="text" placeholder="username">
-            <input name="password" type="password" placeholder="password">
+        <form method="GET">
+            <div class="input-group">
+                <input name="username" type="text" placeholder="Username" required>
+            </div>
+            <div class="input-group">
+                <input name="password" type="password" placeholder="Password" required>
+            </div>
+            
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="footer-links">
+            <p>Not A User? <a href="Signup.html">Sign Up</a></p>
+            <p><a href="books.html" class="dashboard-link">View Books Dashboard</a></p>
         </div>
-        
-        <button style="margin-top: 20px;">login</button>
+    </div>
 
-        <p>Not A User <span><a href="SignUp.html">Sign Up</a></span></p>
-        <p style="margin-top: 15px;"><a href="books.html" style="color: #4CAF50; text-decoration: none; font-weight: bold;">View Books Dashboard</a></p>
-
-    </form>
 </body>
 </html>
