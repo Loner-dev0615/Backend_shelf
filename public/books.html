@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Library Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .book-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .book-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #e2e8f0;
+        }
+
+        .book-info p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .book-info .status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status.read {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+        }
+
+        .status.unread {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button.delete-btn {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+        }
+
+        button.delete-btn:hover {
+            background: linear-gradient(135deg, #f87171, #dc2626);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+        }
+        
+        .nav-link {
+            display: inline-block;
+            margin-top: 40px;
+            color: #818cf8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #c084fc;
+        }
+
+        .loader {
+            color: #818cf8;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-top: 50px;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Book Library</h1>
+    <div class="container" id="books-container">
+        <div class="loader" id="loader">Loading books...</div>
+    </div>
+    
+    <a href="/" class="nav-link">← Back to Home</a>
+
+    <script>
+        const container = document.getElementById('books-container');
+        const loader = document.getElementById('loader');
+
+        async function fetchBooks() {
+            try {
+                const response = await fetch('/books');
+                if (!response.ok) throw new Error('Failed to fetch data');
+                const books = await response.json();
+                renderBooks(books);
+            } catch (error) {
+                container.innerHTML = '<div class="loader">Failed to load data.</div>';
+                console.error(error);
+            }
+        }
+
+        function renderBooks(books) {
+            container.innerHTML = '';
+            if (books.length === 0) {
+                container.innerHTML = '<div class="loader">No books available.</div>';
+                return;
+            }
+
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+
+                const readStatusClass = book.isRead ? 'read' : 'unread';
+                const readStatusText = book.isRead ? 'Read' : 'Not Read';
+
+                card.innerHTML = `
+                    <div class="book-info">
+                        <h3>${book.title}</h3>
+                        <p><strong>Author:</strong> ${book.author}</p>
+                        <p><strong>Year:</strong> ${book.year}</p>
+                        <span class="status ${readStatusClass}">${readStatusText}</span>
+                    </div>
+                    <div class="actions">
+                        <button class="delete-btn" onclick="deleteBook('${book.title}', this)">Delete</button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        async function deleteBook(title, btnElement) {
+            if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
+            
+            const card = btnElement.closest('.book-card');
+            
+            try {
+                const response = await fetch(`/books/${encodeURIComponent(title)}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    card.classList.add('fade-out');
+                    setTimeout(() => {
+                        card.remove();
+                        if(container.children.length === 0) {
+                            container.innerHTML = '<div class="loader">No books available.</div>';
+                        }
+                    }, 300);
+                } else {
+                    alert('Failed to delete the book.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred during deletion.');
+            }
+        }
+
+        fetchBooks();
+    </script>
+</body>
+</html>
